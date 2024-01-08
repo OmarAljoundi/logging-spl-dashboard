@@ -1,4 +1,4 @@
-import { getAllIndices, searchIndex } from "@/app/_lib/open-search";
+import { getAllIndices } from "@/app/_lib/open-search";
 import { NextResponse } from "next/server";
 
 export async function GET() {

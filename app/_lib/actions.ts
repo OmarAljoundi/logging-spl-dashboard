@@ -1,3 +1,5 @@
+import { Client } from "@opensearch-project/opensearch";
+
 export function mapOpenSearchFieldsToObjects(osResponse: any, prefix = "") {
   let fields: any = {};
 

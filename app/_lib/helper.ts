@@ -65,7 +65,7 @@ export function ParseQuery(ruleConfig?: any, query?: any, timeInterval?: any) {
       // Append the time interval filter to the existing must array
       elasticSearchQuery.query.bool.must.push({
         range: {
-          "Content.sentDate": timeInterval,
+          sentDate: timeInterval,
         },
       });
     }
@@ -81,7 +81,7 @@ export function ParseQuery(ruleConfig?: any, query?: any, timeInterval?: any) {
           must: [
             {
               range: {
-                "Content.sentDate": timeInterval,
+                sentDate: timeInterval,
               },
             },
           ],

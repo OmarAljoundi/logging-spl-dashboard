@@ -13,16 +13,19 @@ const column1 = [
     label: "Today",
     timeValue: 1,
     timeUnit: "days",
+    aggs: "1d",
   },
   {
     label: "This week",
     timeValue: 1,
     timeUnit: "weeks",
+    aggs: "7d",
   },
   {
     label: "Last 15 minutes",
     timeValue: 15,
     timeUnit: "minutes",
+    aggs: "15m",
   },
 
   {

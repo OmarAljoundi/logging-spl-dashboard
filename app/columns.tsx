@@ -7,20 +7,12 @@ import JsonDisplay from "./_components/shared/json-display";
 
 export const columns: ColumnDef<any>[] = [
   {
-    accessorKey: "LogLevel",
+    accessorKey: "name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Log Level" />
     ),
     cell: ({ row }) => {
-      return (
-        <Badge
-          variant={
-            row.original._source.LogLevel == "Error" ? "destructive" : "default"
-          }
-        >
-          {row.original._source.LogLevel}
-        </Badge>
-      );
+      return <Badge variant={"default"}>{row.original._source.name}</Badge>;
     },
   },
   {
@@ -29,7 +21,7 @@ export const columns: ColumnDef<any>[] = [
       <DataTableColumnHeader column={column} title="Document" />
     ),
     cell: ({ row }) => {
-      return <JsonDisplay data={row.original._source.Content} />;
+      return <JsonDisplay data={row.original._source} />;
     },
   },
 

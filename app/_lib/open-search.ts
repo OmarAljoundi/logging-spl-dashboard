@@ -25,17 +25,24 @@ export async function insertDocument(indexName: string, doc: any) {
 
 export async function searchLogs({
   query = { match_all: {} },
+  size,
+  page,
   indexName = null,
 }: {
   query?: any;
   indexName: string | null;
+  page: number;
+  size: number;
 }) {
   try {
+    const from = (page - 1) * size;
     var searchObject: any = {
       body: {
         query: {
           ...query,
         },
+        from,
+        size,
         _source: true,
       },
     };

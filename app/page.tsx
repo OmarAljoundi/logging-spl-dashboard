@@ -5,6 +5,7 @@ import Toolbar from "./_components/tool-bar";
 
 import { toast } from "sonner";
 import useLog from "./_hooks/use-logs";
+import Chart from "./_components/chart";
 
 const LogHome = () => {
   const { data, error } = useLog();
@@ -12,13 +13,13 @@ const LogHome = () => {
     console.log;
     toast.error(`Error while fetching the logs, ${error.message}`);
   }
+
+  console.log(":data", data);
   return (
     <div>
       <Toolbar />
-      <DataTable
-        columns={columns}
-        data={((data?.body as any)?.result as any) || []}
-      />
+      <Chart />
+      <DataTable columns={columns} data={data || []} />
     </div>
   );
 };

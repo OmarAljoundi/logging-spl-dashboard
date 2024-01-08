@@ -6,14 +6,16 @@ export const searchParamsSchema = z.object({
     .object({
       timeTense: z.string().optional(),
       label: z.string().optional(),
-      timeValue: z.number().min(1).optional(),
-      timeUnit: z.string().optional(),
+      timeValue: z.number().default(15),
+      timeUnit: z.string().default("minutes"),
     })
-    .optional()
-    .nullable()
-    .default(null),
-
+    .default({
+      timeValue: 15,
+      timeUnit: "minutes",
+    }),
   index: z.string().optional().nullable().default("all"),
+  page: z.number().default(1),
+  size: z.number().default(500),
   query: z.record(z.any()).optional(),
 });
 
