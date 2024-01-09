@@ -3,7 +3,7 @@ import useConfig from "@/app/_hooks/use-config";
 import { config } from "@/app/_lib/search-config";
 import { useSearchParams } from "@search-params/react";
 import { FunctionComponent, useCallback, useMemo } from "react";
-import { Badge } from "../../ui/badge";
+import { Badge } from "../ui/badge";
 import { X } from "lucide-react";
 import {
   Query,
@@ -15,7 +15,7 @@ import {
   JsonRule,
 } from "@react-awesome-query-builder/antd";
 import { ProcessConditions } from "@/app/_lib/helper";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 interface FilterResultProps {}
 

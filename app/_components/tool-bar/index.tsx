@@ -4,7 +4,7 @@ import DateInterval from "./date-interval";
 import Refresh from "./refresh";
 import { IndexSelector } from "./index-selector";
 import ClearQuery from "./clear-query";
-import FilterResult from "./filter-result";
+import FilterResult from "../filter-result";
 
 export default function Toolbar() {
   return (
@@ -21,8 +21,6 @@ export default function Toolbar() {
           <Refresh />
         </div>
       </div>
-
-      <FilterResult />
     </div>
   );
 }

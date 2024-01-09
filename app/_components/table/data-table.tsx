@@ -28,16 +28,26 @@ import { DataTableToolbar } from "./data-table-toolbar";
 import { cn } from "@/app/_lib/utils";
 import { searchLogs } from "@/app/_lib/open-search";
 import { Button } from "../ui/button";
+import { useSearchParams } from "@search-params/react";
+import { config } from "@/app/_lib/search-config";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  total: number;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  total,
 }: DataTableProps<TData, TValue>) {
+  const [scrollAreaHeight, setScrollAreaHeight] = React.useState("auto");
+
+  const { page, size } = useSearchParams({
+    route: config.home,
+  });
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -54,12 +64,17 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
       columnFilters,
+      pagination: {
+        pageSize: size,
+        pageIndex: page - 1,
+      },
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
+    pageCount: total,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -68,12 +83,36 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  React.useEffect(() => {
+    const calculateHeight = () => {
+      const toolbarHeight =
+        document?.querySelector(".dataTableToolbar")?.scrollHeight;
+
+      console.log({ toolbarHeight });
+      const paginationHeight = document?.querySelector(
+        ".dataTablePagination"
+      )?.clientHeight;
+
+      console.log(window.innerHeight);
+      const availableHeight =
+        window.innerHeight - (toolbarHeight || 0) - (paginationHeight || 0);
+
+      setScrollAreaHeight(`${availableHeight}px`);
+    };
+
+    calculateHeight();
+
+    // Recalculate on window resize
+    window.addEventListener("resize", calculateHeight);
+
+    // Cleanup listener
+    return () => window.removeEventListener("resize", calculateHeight);
+  }, []);
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      <div className="rounded-md border  dataTableToolbar">
         <Table>
-          <TableHeader>
+          <TableHeader className="sticky top-0 bg-white">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -98,27 +137,33 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-                className="group"
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    className={cn(
-                      cell.column.id == "actions"
-                        ? "sticky right-0 bg-white shadow-card z-50 "
-                        : ""
-                    )}
-                    key={cell.id}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
+            <ScrollArea style={{ height: scrollAreaHeight }}>
+              {table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  className="group"
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      className={cn(
+                        cell.column.id == "actions"
+                          ? "sticky right-0 bg-white shadow-card z-50 "
+                          : ""
+                      )}
+                      key={cell.id}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </ScrollArea>
           </TableBody>
         </Table>
       </div>

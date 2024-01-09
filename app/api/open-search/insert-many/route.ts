@@ -40,7 +40,7 @@ export async function GET() {
   const actions = [];
 
   for (let i = 0; i < 10000; i++) {
-    actions.push(generateRandomLog("hubops"));
+    actions.push(generateRandomLog("billing"));
   }
 
   try {

@@ -23,11 +23,20 @@ export async function searchLogs({
     const from = (page - 1) * size;
     var searchObject: any = {
       body: {
+        track_total_hits: true,
         query: {
           ...query,
         },
         from,
         size,
+        aggs: {
+          hits_over_time: {
+            date_histogram: {
+              field: 'sentDate',
+              fixed_interval: "3h"
+            }
+          }
+        },
         _source: true,
       },
     };
@@ -36,7 +45,7 @@ export async function searchLogs({
 
     console.log("searchObject", JSON.stringify(searchObject));
     const response = await client.search(searchObject);
-    return response.body.hits.hits;
+    return { total: response.body.hits.total.value, result: response.body.hits.hits, aggregations: response.body.aggregations.hits_over_time.buckets };
   } catch (error) {
     console.error("An error occurred:", error);
     throw error;

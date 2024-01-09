@@ -28,7 +28,7 @@ export function IndexSelector() {
   const { data: indices, isLoading } = useQuery({
     queryKey: [TAGS.INDICES],
     queryFn: async () =>
-      (await fetch("http://localhost:3000/api/open-search/get-indices")).json(),
+      (await fetch("http://localhost:3001/api/open-search/get-indices")).json(),
     select: (data) => {
       return data.result?.map((item: any) => {
         return {
@@ -38,6 +38,12 @@ export function IndexSelector() {
       });
     },
   });
+
+  const getIndexLabel = (): string | undefined => {
+    return indices?.find(
+      (item: any) => item.value?.toLowerCase() === index?.toLowerCase()
+    )?.label;
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -50,8 +56,8 @@ export function IndexSelector() {
         >
           {index && index == "all"
             ? "Showing all indices"
-            : indices?.find((item: any) => item.value === index)?.label
-            ? "Select index..."
+            : !!getIndexLabel()
+            ? getIndexLabel()
             : "Something went wrong.."}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>

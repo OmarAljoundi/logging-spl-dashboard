@@ -1,89 +1,70 @@
-import { FunctionComponent } from "react";
-import { ResponsiveBar } from "@nivo/bar";
+"use client";
+import { format } from "date-fns";
+import { FunctionComponent, useMemo } from "react";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarController,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ChartOptions,
+} from "chart.js";
+import useLog from "@/app/_hooks/use-logs";
+
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  BarController
+);
 interface BarChartProps {}
 
 const BarChart: FunctionComponent<BarChartProps> = () => {
+  const { data, error, isLoading, isFetching } = useLog();
+
+  const chartData = useMemo(() => {
+    return {
+      labels: data?.aggregations?.map((x: any) =>
+        format(x.key_as_string, "HH")
+      ),
+      datasets: [
+        {
+          label: "Logs per time (3 hours)",
+          backgroundColor: "rgba(75, 192, 192, 0.6)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+          data: data?.aggregations?.map((x: any) => x.doc_count),
+        },
+      ],
+    };
+  }, [data]);
+
+  const options: ChartOptions<"bar"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        ticks: {
+          stepSize: 12,
+        },
+        beginAtZero: true,
+      },
+    },
+  };
   return (
-    <div className="w-full aspect-[4/3] border-dashed border-opacity-50">
-      <ResponsiveBar
-        data={[
-          {
-            name: "A",
-            data: 111,
-          },
-          {
-            name: "B",
-            data: 157,
-          },
-          {
-            name: "C",
-            data: 129,
-          },
-          {
-            name: "D",
-            data: 187,
-          },
-          {
-            name: "E",
-            data: 119,
-          },
-          {
-            name: "F",
-            data: 22,
-          },
-          {
-            name: "G",
-            data: 101,
-          },
-          {
-            name: "H",
-            data: 83,
-          },
-        ]}
-        keys={["data"]}
-        indexBy="name"
-        margin={{ top: 50, right: 50, bottom: 50, left: 60 }}
-        padding={0.3}
-        valueScale={{ type: "linear" }}
-        indexScale={{ type: "band", round: true }}
-        colors={{ scheme: "paired" }}
-        borderWidth={1}
-        borderColor={{
-          from: "color",
-          modifiers: [["darker", 0.2]],
-        }}
-        axisTop={null}
-        axisRight={null}
-        axisBottom={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: "Name",
-          legendPosition: "middle",
-          legendOffset: 45,
-          truncateTickAt: 0,
-        }}
-        axisLeft={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: "Number",
-          legendPosition: "middle",
-          legendOffset: -45,
-          truncateTickAt: 0,
-        }}
-        theme={{
-          tooltip: {
-            container: {
-              fontSize: "12px",
-            },
-          },
-        }}
-        labelSkipWidth={12}
-        labelSkipHeight={12}
-        role="application"
-        ariaLabel="A bar chart showing data"
-      />
+    <div className="w-full  border-dashed border-opacity-50">
+      {isLoading ? (
+        <h1>Chart is loading</h1>
+      ) : (
+        <Bar data={chartData} options={options} />
+      )}
     </div>
   );
 };

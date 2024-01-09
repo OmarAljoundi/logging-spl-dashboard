@@ -21,7 +21,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/open-search/get-logs?index=hubops",
+					"raw": "http://localhost:3001/api/open-search/get-logs?index=hubops",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -48,7 +48,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/api/open-search/get-mapping",
+					"raw": "http://localhost:3001/api/open-search/get-mapping",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -78,7 +78,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/open-search?index=hubops",
+					"raw": "http://localhost:3001/api/open-search?index=hubops",
 					"protocol": "http",
 					"host": [
 						"localhost"

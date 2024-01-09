@@ -8,6 +8,7 @@ import ReactQueryProvider from "./_provider/react-query-provider";
 import { SearchParamsProvider } from "./_provider/search-params-provider";
 import { Toaster } from "./_components/ui/sonner";
 import { TooltipProvider } from "./_components/ui/tooltip";
+import { cn } from "./_lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,17 +29,18 @@ export default function RootLayout({
   const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : undefined;
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={cn(inter.className, "overflow-hidden")}>
         <ReactQueryProvider>
           <Toaster closeButton richColors />
           <TooltipProvider delayDuration={0}>
             <SearchParamsProvider>
+              <Navbar />
+
               <MainLayout
                 defaultLayout={defaultLayout}
                 defaultCollapsed={defaultCollapsed}
               >
-                <Navbar />
-                <main className=" min-h-screen flex-col items-center justify-between p-24">
+                <main className=" min-h-screen flex-col items-center justify-between py-24">
                   {children}
                 </main>
               </MainLayout>

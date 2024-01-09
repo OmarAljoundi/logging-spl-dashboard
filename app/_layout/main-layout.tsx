@@ -18,11 +18,10 @@ interface MainLayoutProps {
 }
 
 const MainLayout: FunctionComponent<MainLayoutProps> = ({
-  defaultLayout = [265, 440],
+  defaultLayout = [216, 440],
   defaultCollapsed,
   children,
 }) => {
-  const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -38,25 +37,10 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
         collapsible={true}
         minSize={6}
         maxSize={15}
-        onExpand={() => {
-          setIsCollapsed(false);
-          document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-            false
-          )}`;
-        }}
-        onCollapse={() => {
-          setIsCollapsed(true);
-          document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-            true
-          )}`;
-        }}
-        className={cn(
-          isCollapsed && "min-w-[50px] transition-all duration-1000 ease-in-out"
-        )}
       >
         <Separator />
         <Nav
-          isCollapsed={isCollapsed ?? false}
+          isCollapsed={false}
           links={[
             {
               title: "Inbox",

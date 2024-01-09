@@ -14,7 +14,7 @@ export const searchParamsSchema = z.object({
       timeUnit: "minutes",
     }),
   index: z.string().optional().nullable().default("all"),
-  page: z.number().default(1),
+  page: z.number().min(1).default(1),
   size: z.number().default(500),
   query: z.record(z.any()).optional(),
 });
