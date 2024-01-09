@@ -107,7 +107,7 @@ const useConfig = () => {
   const { data: config, isLoading } = useQuery({
     queryKey: ["Open-Search-Mapping"],
     queryFn: async () =>
-      (await fetch("http://localhost:3001/api/open-search/get-mapping")).json(),
+      (await fetch("http://localhost:3000/api/open-search/get-mapping")).json(),
     select: (data) => {
       const operators: Operators = {
         ...InitialConfig.operators,

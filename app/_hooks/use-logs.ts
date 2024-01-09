@@ -1,10 +1,9 @@
 "use client";
 
 import { useSearchParams } from "@search-params/react";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { config } from "../_lib/search-config";
 import { TAGS } from "../_lib/tags";
-import { Fetch } from "../_lib/fetcher";
 import { CreateTimeRangeFilter, ParseQuery } from "../_lib/helper";
 import useConfig from "./use-config";
 import { searchLogs } from "../_lib/server-actions";
@@ -33,9 +32,9 @@ export default function useLog() {
       });
       return result;
     },
-
+    placeholderData: keepPreviousData,
     enabled: !isRuleConfigLoading,
   });
 
-  return { data, error, isLoading, refetch, isFetching };
+  return { data, error, isLoading, refetch, isFetching, isRuleConfigLoading };
 }

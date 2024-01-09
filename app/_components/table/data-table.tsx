@@ -4,6 +4,7 @@ import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
+  Row,
   SortingState,
   VisibilityState,
   flexRender,
@@ -24,14 +25,10 @@ import {
   TableRow,
 } from "../ui/table";
 import { DataTablePagination } from "./data-table-pagination";
-import { DataTableToolbar } from "./data-table-toolbar";
 import { cn } from "@/app/_lib/utils";
-import { searchLogs } from "@/app/_lib/open-search";
-import { Button } from "../ui/button";
 import { useSearchParams } from "@search-params/react";
 import { config } from "@/app/_lib/search-config";
-import { ScrollArea } from "../ui/scroll-area";
-
+import { useVirtualizer } from "@tanstack/react-virtual";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -43,7 +40,12 @@ export function DataTable<TData, TValue>({
   data,
   total,
 }: DataTableProps<TData, TValue>) {
-  const [scrollAreaHeight, setScrollAreaHeight] = React.useState("auto");
+  const [scrollAreaHeight, setScrollAreaHeight] = React.useState(0);
+  const tableContainerRef = React.useRef<HTMLDivElement>(null);
+
+  const memoColumns = React.useMemo(() => {
+    return columns;
+  }, []);
 
   const { page, size } = useSearchParams({
     route: config.home,
@@ -58,7 +60,7 @@ export function DataTable<TData, TValue>({
 
   const table = useReactTable({
     data,
-    columns,
+    columns: memoColumns,
     state: {
       sorting,
       columnVisibility,
@@ -81,38 +83,57 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    debugTable: true,
   });
 
-  React.useEffect(() => {
-    const calculateHeight = () => {
-      const toolbarHeight =
-        document?.querySelector(".dataTableToolbar")?.scrollHeight;
-
-      console.log({ toolbarHeight });
-      const paginationHeight = document?.querySelector(
-        ".dataTablePagination"
+  React.useLayoutEffect(() => {
+    const calculateScrollAreaHeight = () => {
+      const paginationHeight = document.getElementById(
+        "Data-Table-Pagination"
       )?.clientHeight;
-
-      console.log(window.innerHeight);
-      const availableHeight =
-        window.innerHeight - (toolbarHeight || 0) - (paginationHeight || 0);
-
-      setScrollAreaHeight(`${availableHeight}px`);
+      const navBarHight = document.getElementById("Nav-bar")?.offsetHeight;
+      const chart = document.getElementById("Chart")?.clientHeight;
+      const height =
+        window.innerHeight - (paginationHeight! + navBarHight! + chart!);
+      setScrollAreaHeight(height);
     };
 
-    calculateHeight();
+    // Set the initial height
+    calculateScrollAreaHeight();
 
-    // Recalculate on window resize
-    window.addEventListener("resize", calculateHeight);
+    // Add event listener to resize
+    window.addEventListener("resize", calculateScrollAreaHeight);
 
-    // Cleanup listener
-    return () => window.removeEventListener("resize", calculateHeight);
+    // Cleanup event listener
+    return () =>
+      window.removeEventListener("resize", calculateScrollAreaHeight);
   }, []);
+  const { rows } = table.getRowModel();
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    estimateSize: () => 33, //estimate row height for accurate scrollbar dragging
+    getScrollElement: () => tableContainerRef.current,
+    measureElement:
+      typeof window !== "undefined" &&
+      navigator.userAgent.indexOf("Firefox") === -1
+        ? (element) => element?.getBoundingClientRect().height
+        : undefined,
+    overscan: 5,
+  });
+
   return (
-    <div className="space-y-4">
-      <div className="rounded-md border  dataTableToolbar">
+    <div className="flex flex-col">
+      <div
+        className="rounded-md border overflow-auto"
+        ref={tableContainerRef}
+        style={{
+          overflow: "auto", //our scrollable table container
+          position: "relative", //needed for sticky header
+          height: scrollAreaHeight, //should be a fixed height
+        }}
+      >
         <Table>
-          <TableHeader className="sticky top-0 bg-white">
+          <TableHeader className="sticky top-0 bg-white z-50">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -138,15 +159,24 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
 
-          <TableBody>
-            <ScrollArea style={{ height: scrollAreaHeight }}>
-              {table.getRowModel().rows.map((row) => (
+          {/*  */}
+          <TableBody style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              const row = rows[virtualRow.index] as Row<TData>;
+              return (
                 <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="group"
+                  data-index={virtualRow.index}
+                  ref={(node) => rowVirtualizer.measureElement(node)}
+                  key={row?.id}
+                  //data-state={row.getIsSelected() && "selected"}
+                  style={{
+                    display: "flex",
+                    position: "absolute",
+                    transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scroll
+                    width: "100%",
+                  }}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row?.getVisibleCells()?.map((cell) => (
                     <TableCell
                       className={cn(
                         cell.column.id == "actions"
@@ -162,12 +192,15 @@ export function DataTable<TData, TValue>({
                     </TableCell>
                   ))}
                 </TableRow>
-              ))}
-            </ScrollArea>
+              );
+            })}
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+
+      <div id="Data-Table-Pagination" className="mt-auto ">
+        <DataTablePagination table={table} />
+      </div>
     </div>
   );
 }

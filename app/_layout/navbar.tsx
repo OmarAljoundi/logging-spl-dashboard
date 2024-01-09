@@ -4,7 +4,7 @@ import Toolbar from "../_components/tool-bar";
 
 const Navbar = () => {
   return (
-    <div className="fixed  bg-white w-full z-50 border-b p-2">
+    <div id="Nav-bar" className="bg-white w-full z-50 border-b p-2">
       <Toolbar />
     </div>
   );

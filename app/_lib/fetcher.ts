@@ -1,4 +1,4 @@
-const url = "http://localhost:3001/api";
+const url = "http://localhost:3000/api";
 
 export async function Fetch<T>({
   cache = "no-store",

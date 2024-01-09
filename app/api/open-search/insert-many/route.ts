@@ -37,17 +37,15 @@ function generateRandomLog(index: string) {
 }
 
 export async function GET() {
-  const actions = [];
-
-  for (let i = 0; i < 10000; i++) {
-    actions.push(generateRandomLog("billing"));
-  }
+  // for (let i = 0; i < 10000; i++) {
+  //   actions.push(generateRandomLog("billing"));
+  // }
 
   try {
-    const response = await client.bulk({
-      body: actions.flatMap((doc) => [{ index: doc.index }, doc]),
-    });
-    return NextResponse.json({ success: true, message: response.statusCode });
+    // const response = await client.bulk({
+    //   body: actions.flatMap((doc) => [{ index: doc.index }, doc]),
+    // });
+    return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ success: true, error });
   }

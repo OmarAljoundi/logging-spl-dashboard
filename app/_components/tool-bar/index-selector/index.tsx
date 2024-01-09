@@ -28,7 +28,7 @@ export function IndexSelector() {
   const { data: indices, isLoading } = useQuery({
     queryKey: [TAGS.INDICES],
     queryFn: async () =>
-      (await fetch("http://localhost:3001/api/open-search/get-indices")).json(),
+      (await fetch("http://localhost:3000/api/open-search/get-indices")).json(),
     select: (data) => {
       return data.result?.map((item: any) => {
         return {

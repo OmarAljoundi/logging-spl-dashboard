@@ -1,110 +1,93 @@
 {
-	"info": {
-		"_postman_id": "5ae694e1-106d-4ca7-a095-81b81dda9ffc",
-		"name": "Open Search",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "17640588"
-	},
-	"item": [
-		{
-			"name": "Get Logs",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:3001/api/open-search/get-logs?index=hubops",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"api",
-						"open-search",
-						"get-logs"
-					],
-					"query": [
-						{
-							"key": "index",
-							"value": "hubops"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Mapping",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:3001/api/open-search/get-mapping",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"api",
-						"open-search",
-						"get-mapping"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add Log",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"LogLevel\":\"Error\",\r\n    \"Content\":{\r\n        \"shipment\":\"GN1511215645656\",\r\n        \"address\":\"Amman\",\r\n        \"tracking\":\"out for delievery\",\r\n        \"sentDate\":\"2023-01-05T13:04:23.456Z\",\r\n        \"exception\":\"Error while sending notification to the customer line 245\"\r\n    }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:3001/api/open-search?index=hubops",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"api",
-						"open-search"
-					],
-					"query": [
-						{
-							"key": "index",
-							"value": "hubops"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get All Indices",
-			"request": {
-				"method": "GET",
-				"header": []
-			},
-			"response": []
-		}
-	]
+  "info": {
+    "_postman_id": "5ae694e1-106d-4ca7-a095-81b81dda9ffc",
+    "name": "Open Search",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "17640588"
+  },
+  "item": [
+    {
+      "name": "Get Logs",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/open-search/get-logs?index=hubops",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "open-search", "get-logs"],
+          "query": [
+            {
+              "key": "index",
+              "value": "hubops"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Mapping",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/open-search/get-mapping",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "open-search", "get-mapping"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add Log",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"LogLevel\":\"Error\",\r\n    \"Content\":{\r\n        \"shipment\":\"GN1511215645656\",\r\n        \"address\":\"Amman\",\r\n        \"tracking\":\"out for delievery\",\r\n        \"sentDate\":\"2023-01-05T13:04:23.456Z\",\r\n        \"exception\":\"Error while sending notification to the customer line 245\"\r\n    }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/open-search?index=hubops",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "open-search"],
+          "query": [
+            {
+              "key": "index",
+              "value": "hubops"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Indices",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ]
 }

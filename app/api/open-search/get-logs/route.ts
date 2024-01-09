@@ -12,9 +12,9 @@ export async function POST(req: NextRequest) {
     if (Object.keys(query).length === 0) {
       query = undefined;
     }
-    var result = await searchLogs({ indexName, query });
+    //var result = await searchLogs({ indexName, query });
     return NextResponse.json({
-      result,
+      result: "ad",
     });
   } catch (ex) {
     console.log(ex);

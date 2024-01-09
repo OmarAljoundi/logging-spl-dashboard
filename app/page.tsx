@@ -1,24 +1,26 @@
 "use client";
 import { DataTable } from "./_components/table/data-table";
 import { columns } from "./columns";
-import Toolbar from "./_components/tool-bar";
-
 import { toast } from "sonner";
 import useLog from "./_hooks/use-logs";
 import Chart from "./_components/chart";
-import { Separator } from "./_components/ui/separator";
-import { ScrollArea } from "./_components/ui/scroll-area";
+import Loading from "./_components/shared/loading";
 
 const LogHome = () => {
-  const { data, error } = useLog();
+  const { data, error, isLoading, isRuleConfigLoading } = useLog();
   if (error) {
     toast.error(`Error while fetching the logs, ${error.message}`);
   }
 
-  console.log(":data", data);
+  if (isLoading || isRuleConfigLoading) {
+    return <Loading />;
+  }
+
   return (
     <div>
-      <Chart />
+      <div id="Chart">
+        <Chart />
+      </div>
 
       <DataTable
         columns={columns}

@@ -10,7 +10,7 @@ const Chart: FunctionComponent<ChartProps> = () => {
   return (
     <div className="w-full mx-auto">
       <div className="flex  gap-4 px-2 justify-between">
-        <h2 className="text-2xl font-semibold text-center">
+        <h2 className="text-2xl font-semibold text-center py-3">
           Total Hits: {data?.total}
         </h2>
       </div>

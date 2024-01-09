@@ -40,7 +40,7 @@ export default function RootLayout({
                 defaultLayout={defaultLayout}
                 defaultCollapsed={defaultCollapsed}
               >
-                <main className=" min-h-screen flex-col items-center justify-between py-24">
+                <main className=" min-h-screen flex-col items-center justify-between ">
                   {children}
                 </main>
               </MainLayout>
