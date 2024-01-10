@@ -11,13 +11,17 @@ interface RefreshProps {}
 const Refresh: FunctionComponent<RefreshProps> = () => {
   const { isFetching, isLoading, refetch } = useLog();
   return (
-    <Button onClick={() => refetch()} disabled={isLoading || isFetching}>
+    <Button
+      onClick={() => refetch()}
+      disabled={isLoading || isFetching}
+      size={"icon"}
+      variant={"outline"}
+    >
       {isLoading || isFetching ? (
-        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+        <ReloadIcon className="h-4 w-4 animate-spin" />
       ) : (
-        <RefreshCcw className="mr-2 h-4 w-4" />
+        <RefreshCcw className="h-4 w-4" />
       )}
-      {isLoading || isFetching ? "Refreshing.." : "Refresh"}
     </Button>
   );
 };

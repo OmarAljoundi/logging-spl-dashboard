@@ -5,14 +5,13 @@ import type {
   Config,
   ImmutableTree,
   BuilderProps,
-} from "@react-awesome-query-builder/antd"; //
+} from "@react-awesome-query-builder/antd";
 import {
   Query,
   Builder,
   Utils as QbUtils,
 } from "@react-awesome-query-builder/antd";
 
-import "@react-awesome-query-builder/ui/css/styles.css";
 import "./rules-builder.css";
 import { Button } from "../../ui/button";
 import { useSearchParams } from "@search-params/react";
@@ -57,9 +56,6 @@ const RulesBuilder: React.FC<{ config: Config; handleClose: () => void }> = ({
         tree: immutableTree,
         config: config,
       }));
-
-      const jsonTree = QbUtils.getTree(immutableTree);
-      console.log(jsonTree);
     },
     []
   );
@@ -90,29 +86,34 @@ const RulesBuilder: React.FC<{ config: Config; handleClose: () => void }> = ({
           renderBuilder={renderBuilder}
         />
 
-        <div className="query-builder-result">
-          <div className="flex gap-x-2 items-center">
-            <ScanSearch className="w-4 h-4" />
-            <h1 className="font-bold">Previwe</h1>
-          </div>
-          <Badge variant={"outline"} className="text-xs">
-            {QbUtils.spelFormat(state.tree, state.config)}
-          </Badge>
-        </div>
+        {!!QbUtils.spelFormat(state.tree, state.config) && (
+          <>
+            <div className="query-builder-result">
+              <div className="flex gap-x-2 items-center">
+                <ScanSearch className="w-4 h-4" />
+                <h1 className="font-bold">Previwe</h1>
+              </div>
+              <Badge variant={"outline"} className="text-xs">
+                {QbUtils.spelFormat(state.tree, state.config)}
+              </Badge>
+            </div>
 
-        <div className="query-builder-result">
-          <div className="flex gap-x-2 items-center">
-            <ScanSearch className="w-4 h-4" />
-            <h1 className="font-bold">For Dev</h1>
-          </div>
-          <Badge variant={"outline"} className="text-xs">
-            {JSON.stringify(
-              QbUtils.elasticSearchFormat(state.tree, state.config),
-              null,
-              2
-            )}
-          </Badge>
-        </div>
+            <div className="query-builder-result">
+              <div className="flex gap-x-2 items-center">
+                <ScanSearch className="w-4 h-4" />
+                <h1 className="font-bold">For Dev</h1>
+              </div>
+              <Badge variant={"outline"} className="text-xs">
+                {JSON.stringify(
+                  QbUtils.elasticSearchFormat(state.tree, state.config),
+                  null,
+                  2
+                )}
+              </Badge>
+            </div>
+          </>
+        )}
+
         <div className=" flex justify-end ">
           <Button variant={"default"} onClick={() => ApplyFilter()}>
             Apply Filter

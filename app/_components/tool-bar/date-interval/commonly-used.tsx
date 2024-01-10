@@ -6,7 +6,9 @@ import { config } from "@/app/_lib/search-config";
 import { useSearchParams } from "@search-params/react";
 import { cn } from "@/app/_lib/utils";
 
-interface CommonlyUsedProps {}
+interface CommonlyUsedProps {
+  closeModal: () => void;
+}
 
 const column1 = [
   {
@@ -69,7 +71,7 @@ const column2 = [
   },
 ];
 
-const CommonlyUsed: FunctionComponent<CommonlyUsedProps> = () => {
+const CommonlyUsed: FunctionComponent<CommonlyUsedProps> = ({ closeModal }) => {
   const { setQuery, searchInterval } = useSearchParams({
     route: config.home,
   });
@@ -80,9 +82,11 @@ const CommonlyUsed: FunctionComponent<CommonlyUsedProps> = () => {
         label: data.label,
         timeUnit: data?.timeUnit,
         timeValue: data?.timeValue,
-        timeTense: undefined,
+        timeTense: "next",
       },
     });
+
+    closeModal();
   };
   return (
     <div className="px-4 py-2">

@@ -4,6 +4,7 @@ import { FunctionComponent } from "react";
 import { Button } from "../../ui/button";
 import { useSearchParams } from "@search-params/react";
 import { config, searchParamsSchema } from "@/app/_lib/search-config";
+import { Trash2 } from "lucide-react";
 
 interface ClearQueryProps {}
 
@@ -12,13 +13,9 @@ const ClearQuery: FunctionComponent<ClearQueryProps> = () => {
     route: config.home,
   });
 
-  const c = () => {
-    console.log(searchParamsSchema.parse({}));
-    clearQuery();
-  };
   return (
-    <Button onClick={() => c()} variant={"destructive"}>
-      Clear Search
+    <Button onClick={() => clearQuery()} variant={"outline"} size={"icon"}>
+      <Trash2 className="w-4 h-4" />
     </Button>
   );
 };

@@ -13,9 +13,11 @@ import { Separator } from "../../ui/separator";
 import { useSearchParams } from "@search-params/react";
 import { config } from "@/app/_lib/search-config";
 
-interface QuickStartProps {}
+interface QuickStartProps {
+  closeModal: () => void;
+}
 
-const QuickStart: FunctionComponent<QuickStartProps> = () => {
+const QuickStart: FunctionComponent<QuickStartProps> = ({ closeModal }) => {
   const { setQuery, searchInterval } = useSearchParams({
     route: config.home,
   });
@@ -36,6 +38,7 @@ const QuickStart: FunctionComponent<QuickStartProps> = () => {
         timeTense,
       },
     });
+    closeModal();
   };
 
   return (

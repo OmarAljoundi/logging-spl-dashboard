@@ -19,8 +19,8 @@ export default function Filter() {
   return (
     <Popover onOpenChange={(e) => setOpen(e)} open={open}>
       <PopoverTrigger asChild>
-        <Button>
-          <FilterIcon className="mr-2 h-4 w-4" /> Add new filter
+        <Button variant={"outline"} size={"icon"}>
+          <FilterIcon className=" h-4 w-4" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[800px]  p-0" align="start">

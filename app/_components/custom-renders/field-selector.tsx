@@ -17,6 +17,7 @@ import {
   FieldProps,
   ReactAttributes,
 } from "@react-awesome-query-builder/ui";
+import { ScrollArea } from "../ui/scroll-area";
 
 export function FieldSelector(props: ReactAttributes & FieldProps<Config>) {
   const [open, setOpen] = React.useState(false);
@@ -28,7 +29,7 @@ export function FieldSelector(props: ReactAttributes & FieldProps<Config>) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[120px] justify-between"
+          className="w-[200px] justify-between"
           size={"sm"}
         >
           {props.selectedKey
@@ -39,30 +40,35 @@ export function FieldSelector(props: ReactAttributes & FieldProps<Config>) {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" />
-          <CommandEmpty>No framework found.</CommandEmpty>
-          <CommandGroup>
-            {props?.items?.map((item) => (
-              <CommandItem
-                key={item.key}
-                value={item.key}
-                onSelect={(currentValue) => {
-                  props.setField(item.path!);
-                  setOpen(false);
-                }}
-              >
-                {item.label}
-                <CheckIcon
-                  className={cn(
-                    "ml-auto h-4 w-4",
-                    props.key === item.key ? "opacity-100" : "opacity-0"
-                  )}
-                />
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
+        <ScrollArea className="h-[250px]">
+          <Command>
+            <CommandInput
+              placeholder={props.placeholder}
+              className="h-9 sticky top-0 z-10"
+            />
+            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandGroup>
+              {props?.items?.map((item) => (
+                <CommandItem
+                  key={item.key}
+                  value={item.key}
+                  onSelect={(currentValue) => {
+                    props.setField(item.path!);
+                    setOpen(false);
+                  }}
+                >
+                  {item.label}
+                  <CheckIcon
+                    className={cn(
+                      "ml-auto h-4 w-4",
+                      props.key === item.key ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        </ScrollArea>
       </PopoverContent>
     </Popover>
   );

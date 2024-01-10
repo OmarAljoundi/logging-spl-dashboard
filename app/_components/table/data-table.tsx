@@ -83,7 +83,6 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    debugTable: true,
   });
 
   React.useLayoutEffect(() => {
@@ -92,9 +91,7 @@ export function DataTable<TData, TValue>({
         "Data-Table-Pagination"
       )?.clientHeight;
       const navBarHight = document.getElementById("Nav-bar")?.offsetHeight;
-      const chart = document.getElementById("Chart")?.clientHeight;
-      const height =
-        window.innerHeight - (paginationHeight! + navBarHight! + chart!);
+      const height = window.innerHeight - (paginationHeight! + navBarHight!);
       setScrollAreaHeight(height);
     };
 

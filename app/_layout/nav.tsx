@@ -1,89 +1,106 @@
 "use client";
-import Link from "next/link";
-import { buttonVariants } from "../_components/ui/button";
-import { cn } from "../_lib/utils";
+import { Button } from "../_components/ui/button";
+import { CalendarClock, CaseSensitive, Hash, HelpCircle } from "lucide-react";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "../_components/ui/tooltip";
-import { LucideIcon } from "lucide-react";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../_components/ui/accordion";
+import { toast } from "sonner";
+import { ScrollArea } from "../_components/ui/scroll-area";
+import { Badge } from "../_components/ui/badge";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+import { SearchInput } from "../_components/ui/search-input";
+import useConfig from "../_hooks/use-config";
 
-interface NavProps {
-  isCollapsed: boolean;
-  links: {
-    title: string;
-    label?: string;
-    icon: LucideIcon;
-    variant: "default" | "ghost";
-  }[];
-}
+export function Nav() {
+  const { fields, isLoading, error } = useConfig();
+  const [query, setQuery] = useState("");
+  if (error) {
+    toast.error(`Error while getting fields mapped ${error}`);
+  }
 
-export function Nav({ links, isCollapsed }: NavProps) {
+  const filteredFields = () => {
+    return Object.entries(fields)?.filter(([key, entry]: any) =>
+      key.includes(query)
+    );
+  };
+
   return (
-    <div
-      data-collapsed={isCollapsed}
-      className="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2"
-    >
-      <div
-        className="dark:border-dark flex max-h-12 items-center border-b px-6"
-        style={{ minHeight: "2.4rem" }}
-      ></div>
-      <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
-        {links.map((link, index) =>
-          isCollapsed ? (
-            <Tooltip key={index} delayDuration={0}>
-              <TooltipTrigger asChild>
-                <Link
-                  href="#"
-                  className={cn(
-                    buttonVariants({ variant: link.variant, size: "icon" }),
-                    "h-9 w-9",
-                    link.variant === "default" &&
-                      "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
-                  )}
-                >
-                  <link.icon className="h-4 w-4" />
-                  <span className="sr-only">{link.title}</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="flex items-center gap-4">
-                {link.title}
-                {link.label && (
-                  <span className="ml-auto text-muted-foreground">
-                    {link.label}
-                  </span>
-                )}
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <Link
-              key={index}
-              href="#"
-              className={cn(
-                buttonVariants({ variant: link.variant, size: "sm" }),
-                link.variant === "default" &&
-                  "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
-                "justify-start"
+    <div className="group flex flex-col gap-4 py-2 w-full px-2">
+      <SearchInput
+        placeholder="Search field"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <Accordion type="single" collapsible className="w-full">
+        <AccordionItem value="selected_fields">
+          <AccordionTrigger className="px-2" asChild>
+            <div className="flex justify-between">
+              <h1 className="text-xs cursor-pointer">Selected fields</h1>
+              {isLoading ? (
+                <ReloadIcon className="h-4 w-4 animate-spin" />
+              ) : (
+                <Badge className="text-[10px] p-0 px-1 rounded-full">
+                  {Object.entries(fields).length}
+                </Badge>
               )}
-            >
-              <link.icon className="mr-2 h-4 w-4" />
-              {link.title}
-              {link.label && (
-                <span
-                  className={cn(
-                    "ml-auto",
-                    link.variant === "default" &&
-                      "text-background dark:text-white"
-                  )}
-                >
-                  {link.label}
-                </span>
+            </div>
+          </AccordionTrigger>
+        </AccordionItem>
+        <AccordionItem value="available_fields">
+          <AccordionTrigger className="px-2" asChild>
+            <div className="flex justify-between">
+              <h1 className="text-xs cursor-pointer">Available fields</h1>
+              {isLoading ? (
+                <ReloadIcon className="h-4 w-4 animate-spin" />
+              ) : (
+                <Badge className="text-[10px] p-0 px-1 rounded-full">
+                  {filteredFields()?.length}
+                </Badge>
               )}
-            </Link>
-          )
-        )}
-      </nav>
+            </div>
+          </AccordionTrigger>
+          {fields && (
+            <AccordionContent asChild>
+              <ScrollArea className="h-svh w-full">
+                <div className="pl-1 grid space-y-1 w-full justify-items-start">
+                  {filteredFields()?.map(([key, entry]: any, index: number) => (
+                    <Button
+                      asChild
+                      key={index}
+                      variant={"link"}
+                      size={"sm"}
+                      className=" px-2"
+                    >
+                      <div className="flex gap-x-2">
+                        {getIconPerType(entry.type)}
+                        <p className="truncate w-[130px] ">{key}</p>
+                      </div>
+                    </Button>
+                  ))}
+                </div>
+              </ScrollArea>
+            </AccordionContent>
+          )}
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 }
+
+const getIconPerType = (type: "text" | "keyword" | "datetime" | "number") => {
+  switch (type) {
+    case "number":
+      return <Hash className="w-4 h-4" />;
+    case "datetime":
+      return <CalendarClock className="w-4 h-4" />;
+    case "keyword":
+    case "text":
+      return <CaseSensitive className="w-4 h-4" />;
+    default:
+      return <HelpCircle className="w-4 h-4" />;
+  }
+};

@@ -11,13 +11,12 @@ import {
   CommandItem,
 } from "../../ui/command";
 import { cn } from "@/app/_lib/utils";
-import { useQuery } from "@tanstack/react-query";
-import { TAGS } from "@/app/_lib/tags";
 import "../../../../string.extensions";
 import { useSearchParams } from "@search-params/react";
 import { config } from "@/app/_lib/search-config";
 import { Trash } from "lucide-react";
 import { Separator } from "../../ui/separator";
+import useIndices from "@/app/_hooks/use-indices";
 
 export function IndexSelector() {
   const [open, setOpen] = React.useState(false);
@@ -25,19 +24,7 @@ export function IndexSelector() {
     route: config.home,
   });
 
-  const { data: indices, isLoading } = useQuery({
-    queryKey: [TAGS.INDICES],
-    queryFn: async () =>
-      (await fetch("http://localhost:3000/api/open-search/get-indices")).json(),
-    select: (data) => {
-      return data.result?.map((item: any) => {
-        return {
-          label: item.index.toCapitalCase(),
-          value: item.index,
-        };
-      });
-    },
-  });
+  const { error, indices, isLoading } = useIndices();
 
   const getIndexLabel = (): string | undefined => {
     return indices?.find(
@@ -54,7 +41,7 @@ export function IndexSelector() {
           aria-expanded={open}
           className=" justify-between w-52"
         >
-          {index && index == "all"
+          {index == "_all"
             ? "Showing all indices"
             : !!getIndexLabel()
             ? getIndexLabel()
@@ -93,7 +80,7 @@ export function IndexSelector() {
             <CommandItem
               onSelect={() => {
                 setQuery({
-                  index: undefined,
+                  index: "_all",
                 });
                 setOpen(false);
               }}

@@ -19,7 +19,6 @@ export async function POST(req: NextRequest) {
       done: true,
     });
   } catch (ex) {
-    console.log(ex);
     return NextResponse.json({
       done: false,
       ex,

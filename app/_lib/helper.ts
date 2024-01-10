@@ -14,7 +14,6 @@ export function CreateTimeRangeFilter(timeValue?: number, timeUnit?: string) {
 
   if (!timeValue || !timeUnit) return undefined;
 
-  console.log("tiemunit", { timeUnit, timeValue });
 
   switch (timeUnit) {
     case "minutes":
@@ -53,7 +52,6 @@ export function CreateTimeRangeFilter(timeValue?: number, timeUnit?: string) {
  * @returns An Elasticsearch query object.
  */
 export function ParseQuery(ruleConfig?: any, query?: any, timeInterval?: any) {
-  console.log("here");
   if (ruleConfig && query) {
     const tree = QbUtils.checkTree(QbUtils.loadTree(query), ruleConfig);
     var elasticSearchQuery = QbUtils.elasticSearchFormat(
@@ -70,7 +68,6 @@ export function ParseQuery(ruleConfig?: any, query?: any, timeInterval?: any) {
       });
     }
 
-    console.log("elasticSearchQuery", { elasticSearchQuery });
 
     return elasticSearchQuery;
   } else if (timeInterval) {
@@ -88,7 +85,6 @@ export function ParseQuery(ruleConfig?: any, query?: any, timeInterval?: any) {
         },
       },
     };
-    console.log("result", result);
     return {
       ...result.query,
     };
@@ -121,4 +117,17 @@ export function ProcessConditions(content: string): string[] {
   });
 
   return [...andConditions, ...orConditions];
+}
+
+export function ConvertToMilliseconds(value: number, unit: string): number {
+  switch (unit) {
+    case 'seconds':
+      return value * 1000;
+    case 'minutes':
+      return value * 60000;
+    case 'hours':
+      return value * 3600000;
+    default:
+      throw new Error('Invalid unit. Please use "seconds", "minutes", or "hours".');
+  }
 }

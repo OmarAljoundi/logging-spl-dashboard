@@ -1,7 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .qb-drag-handler,
 .qb-draggable,
 .query-builder {
@@ -26,10 +22,10 @@
   margin: 1rem;
 }
 
-.group {
+.group.group-or-rule {
   border: 1px solid rgba(0, 0, 0, 0.307) !important;
 }
-.group {
+.group.group-or-rule {
   background: #f7f8fc !important;
 }
 
